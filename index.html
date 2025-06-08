@@ -54,18 +54,34 @@
     const text = document.getElementById('text');
     const message = document.getElementById('message');
 
+    let resolved = false;
+
     const img = new Image();
+
     img.onload = function() {
+      if (resolved) return;
+      resolved = true;
       dot.classList.add("green");
       text.textContent = "Service Active";
     };
+
     img.onerror = function() {
+      if (resolved) return;
+      resolved = true;
       dot.classList.add("red");
       text.textContent = "Server Offline";
       message.textContent = "We're currently adding more content to SneefStream. We'll be back shortly.";
     };
 
-    // Try to load a small file from your server — change this if needed
+    // Timeout fallback (5 seconds)
+    setTimeout(() => {
+      if (resolved) return;
+      resolved = true;
+      dot.classList.add("red");
+      text.textContent = "Server Offline";
+      message.textContent = "We're currently adding more content to SneefStream. We'll be back shortly.";
+    }, 5000);
+
     img.src = "https://sneef.stream/favicon.ico?" + new Date().getTime();
   </script>
 </body>
